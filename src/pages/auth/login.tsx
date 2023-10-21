@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLogin } from "../../hooks/useAuth"; // Import your custom hooks for login and theming
 import { useColors } from "../../hooks/useColors";
+import { ClassNames } from "../../utilities/util";
+import { CircleSpinner } from "../../components/loading";
 
 interface LoginFormProps {
   email: string;
@@ -8,11 +10,13 @@ interface LoginFormProps {
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   onLogin: () => void;
+  loading: boolean;
 }
 
 function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const { login } = useLogin();
   const { body } = useColors();
 
@@ -23,7 +27,7 @@ function LoginPage() {
   }, []);
 
   const handleLogin = async () => {
-    console.log("wow");
+    setLoading(true);
     try {
       // Perform login with email and password
       const credentials = { email, password };
@@ -33,6 +37,7 @@ function LoginPage() {
       // Handle login error
       console.error("Login error:", error);
     }
+    setLoading(false);
   };
 
   return (
@@ -56,6 +61,7 @@ function LoginPage() {
             setEmail={setEmail}
             setPassword={setPassword}
             onLogin={handleLogin}
+            loading={loading}
           />
         </div>
       </div>
@@ -69,6 +75,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   setEmail,
   setPassword,
   onLogin,
+  loading,
 }) => {
   return (
     <div className=' px-6 py-12 shadow sm:rounded-lg sm:px-12 bg-white'>
@@ -116,9 +123,20 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <div>
           <button
             type='button'
-            onClick={onLogin}
-            className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
-            Sign in
+            onClick={() => onLogin()}
+            disabled={loading || !email || !password}
+            className={ClassNames(
+              "flex w-full justify-center rounded-md  px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm",
+              loading || !email || !password
+                ? "bg-gray-300 text-gray-800"
+                : " bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            )}>
+            <div className='flex items-center justify-center'>
+              <span className='text-sm font-semibold leading-6  mr-1'>
+                {loading ? "Signing in" : "Sign in"}
+              </span>
+              {loading && <CircleSpinner />}
+            </div>
           </button>
         </div>
       </form>

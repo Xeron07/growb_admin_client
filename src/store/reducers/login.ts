@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loginSuccess } from "./auth";
 import { login } from "../../api/users"; // Replace with your actual login API function
 import { LoginState } from "../../interface"; // Import your interfaces
+import { toast } from "react-toastify";
 
 // Define the type for the login credentials
 interface UserCredentials {
@@ -17,19 +18,23 @@ export const loginAsync = createAsyncThunk(
       // Call the login API function with credentials
       const response = await login(credentials);
 
-      // Extract the token and user data from the API response
-      const { token, user } = response.data;
+      if (response?.success) {
+        // Extract the token and user data from the API response
+        const { token, user } = response;
 
-      // Dispatch the login success action with the token and user data
-      dispatch(loginSuccess({ token, user }));
+        // Dispatch the login success action with the token and user data
+        dispatch(loginSuccess({ token, user }));
 
-      localStorage.setItem("token", token);
+        localStorage.setItem("token", token);
 
-      // Return the API response data
-      return response.data;
-    } catch (error) {
+        // Return the API response data
+        return response.data;
+      } else {
+        toast(response?.error);
+      }
+    } catch (error: any) {
       // If there's an error, throw it to be caught and handled
-      throw error;
+      toast.error(error.message, { position: "top-center" });
     }
   }
 );

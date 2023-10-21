@@ -8,12 +8,7 @@ export const useLogin = () => {
   const loginError = useSelector((state: any) => state.login.error);
 
   const login = async (credentials: ICredential) => {
-    try {
-      await dispatch(loginAsync(credentials));
-      return null; // Successful login, no error
-    } catch (error: any) {
-      return error.message; // Failed login, return the error message
-    }
+    await dispatch(loginAsync(credentials));
   };
 
   return { login, loginStatus, loginError };

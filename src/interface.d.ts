@@ -99,5 +99,11 @@ interface IShop {
   token: string;
 }
 
+interface IAPiResponse {
+  success: boolean;
+  data?: any;
+  error?: any;
+}
+
 // Export the interfaces for use in your application
 export { RootState, AuthState, User, LoginState, ICredential, IShop };

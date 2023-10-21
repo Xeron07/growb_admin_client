@@ -1,4 +1,4 @@
-const baseUrl = "https://localhost:7002/api";
+const baseUrl = "http://localhost:7002/api";
 
 const apiConfig = {
   users: {
