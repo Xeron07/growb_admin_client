@@ -4,7 +4,7 @@ import config from "./config";
 export const fetchTransection = (shopId, trackId) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(config.transections.getAllTransection(shopId, trackId))
+      .get(config.transections.getAllTransection("v1",shopId, trackId))
       .then((response) => {
         if (response.status === 200 && response.data?.success)
           resolve({
@@ -15,7 +15,7 @@ export const fetchTransection = (shopId, trackId) => {
         else resolve({ success: false, error: response?.data?.error });
       })
       .catch((error) => {
-        throw error; // Reject with the error
+        reject(error); // Reject with the error
       });
   });
 };
@@ -34,7 +34,7 @@ export const createTransection = (data) => {
         else resolve({ success: false, error: response?.data?.error });
       })
       .catch((error) => {
-        throw error; // Reject with the error
+        reject(error); // Reject with the error
       });
   });
 };

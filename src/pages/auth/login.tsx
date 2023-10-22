@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLogin } from "../../hooks/useAuth"; // Import your custom hooks for login and theming
 import { useColors } from "../../hooks/useColors";
-import { ClassNames } from "../../utilities/util";
+import { ClassNames, projectLogo } from "../../utilities/util";
 import { CircleSpinner } from "../../components/loading";
 
 interface LoginFormProps {
@@ -46,7 +46,7 @@ function LoginPage() {
         <div className='sm:mx-auto sm:w-full sm:max-w-md'>
           <img
             className='mx-auto h-24 w-auto'
-            src='https://res.cloudinary.com/emerging-it/image/upload/v1697923562/Growb/nbj932fhmcgeqahmn9x1.png'
+            src={projectLogo}
             alt='Your Company'
           />
           <h2 className='mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>

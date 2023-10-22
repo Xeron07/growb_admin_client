@@ -5,6 +5,9 @@ import {
   addRetailer,
 } from "../../api/retailers"; // Replace with your actual API module
 import { IShop } from "../../interface";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { logout } from "./auth";
 
 interface ShopState {
   shopData: IShop | [];
@@ -18,14 +21,18 @@ const initialState: ShopState = {
   error: null,
 };
 
-export const fetchRetailerList = createAsyncThunk<IShop, string>(
+export const fetchRetailerList = createAsyncThunk<IShop>(
   "shop/fetchRetailers",
   async () => {
     try {
       const response = await fetchRetailers(); // Replace with your API call
       return response.data;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      // Handle the error, if needed
+      if (!!error?.response && error?.response?.status === 403) {
+        toast.error("Session Expired. Please sign in");
+        useDispatch()(logout());
+      }
     }
   }
 );
@@ -36,8 +43,15 @@ export const addShop = createAsyncThunk<IShop, IShop>(
     try {
       const response = await addRetailer(shopData); // Replace with your API call
       return response.data;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      // Handle the error, if needed
+      console.error(error);
+      if (!!error?.response && error?.response?.status === 403) {
+        toast.error("Session Expired. Please sign in");
+        useDispatch()(logout());
+      } else if (!!error?.response && error?.response?.status === 400) {
+        toast.warning(error?.response?.data?.errors?.details[0]?.message);
+      } else toast.warning("Invalid data provided");
     }
   }
 );
@@ -47,9 +61,10 @@ export const fetchRetailerData = createAsyncThunk<IShop, string>(
   async (shopId) => {
     try {
       const response = await fetchRetailer(shopId); // Replace with your API call
-      return response.data;
+      return response;
     } catch (error) {
-      throw error;
+      console.error(error);
+      return { success: false };
     }
   }
 );

@@ -14,6 +14,8 @@ const apiConfig = {
       `${baseUrl}/${version}/retailer/${retailerId}`,
     addRetailer: (version = "v1") => `${baseUrl}/${version}/retailer/add`,
     getAllRetailers: (version = "v1") => `${baseUrl}/${version}/retailer/all`,
+    getRetailerByName: (version = "v1", retailerName) =>
+      `${baseUrl}/${version}/retailer/search?shopName=${retailerName}`,
   },
 };
 

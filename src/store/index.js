@@ -10,7 +10,7 @@ const store = configureStore({
     theme: themeReducer,
     auth: authReducer,
     login: loginReducer,
-    retailer: retailerReducer,
+    shop: retailerReducer,
   },
 });
 

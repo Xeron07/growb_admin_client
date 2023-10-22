@@ -19,6 +19,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.token = "";
       state.user = null;
+      window.location.href = "/";
     },
   },
 });

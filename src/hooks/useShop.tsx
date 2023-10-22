@@ -1,4 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
+import {
+  addShop,
+  fetchRetailerData,
+  fetchRetailerList,
+  updateState,
+} from "../store/reducers/shop";
+import { searchRetailerByName } from "../api/retailers";
 
 export const useRetailer = () => {
   const dispatch = useDispatch<any>();
@@ -8,30 +15,46 @@ export const useRetailer = () => {
 
   const fetchRetailers = async () => {
     try {
-      await dispatch.shop.fetchRetailerList();
-    } catch (error) {
+      await dispatch(fetchRetailerList());
+    } catch (error: any) {
       // Handle the error, if needed
     }
   };
 
-  const addRetailer = async (shopData: any) => {
+  const addRetailer = async (shopInformation: any) => {
     try {
-      await dispatch.shop.addShop(shopData);
-    } catch (error) {
+      await dispatch(addShop(shopInformation));
+      await fetchRetailers();
+    } catch (error: any) {
       // Handle the error, if needed
     }
   };
 
   const fetchRetailer = async (shopId: string) => {
     try {
-      await dispatch.shop.fetchRetailer(shopId);
+      const data = await dispatch(fetchRetailerData(shopId));
+      if (data?.payload?.success) {
+        return data?.payload?.data;
+      }
     } catch (error) {
       // Handle the error, if needed
     }
   };
 
+  const fetchRetailerByName = async (shopName: string) => {
+    try {
+      const data = await searchRetailerByName(shopName);
+      if (data?.success) {
+        return data?.data;
+      }
+    } catch (error) {
+      // Handle the error, if needed
+      console.error(error);
+    }
+  };
+
   const updateRetailerState = (partialState: any) => {
-    dispatch.shop.updateState(partialState);
+    dispatch(updateState(partialState));
   };
 
   return {
@@ -42,5 +65,6 @@ export const useRetailer = () => {
     addRetailer,
     fetchRetailer,
     updateRetailerState,
+    fetchRetailerByName,
   };
 };

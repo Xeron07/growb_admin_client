@@ -5,7 +5,6 @@ export const login = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await axios.post(config.users.login(), data);
-
       if (response.status === 200 && response.data?.success)
         resolve({
           success: true,

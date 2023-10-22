@@ -7,6 +7,7 @@ interface User {
   email: string;
   mobileNumber: string;
   password: string;
+  avatar: string;
   nid: string;
   type: "admin" | "retailer" | "menu" | "ro" | "logistic" | "default";
   token: string;
@@ -37,6 +38,7 @@ interface ICredential {
 interface Shipping {
   mobileNumber: string;
   address: string;
+  reciverName: string;
   // Add any other properties within the "shipping" object
 }
 
@@ -64,20 +66,29 @@ interface SocialConnections {
 interface Product {
   icon: string;
   name: string;
+  variant: string;
   quantity: number;
   unitPrice: number;
   totalPrice: number;
   discount: number;
-  // Add any other properties within the "products" array
 }
 
-interface Transection {
+interface ITransectionUser {
+  email: string;
+  userId: string;
+}
+
+interface ITransaction {
   orderId: number;
   trackId: number;
   totalDiscount: number;
+  totalprice: number;
+  status: string;
+  date: string;
   products: Product[];
-  // Add any other properties within the "transections" array
+  user: ITransectionUser;
 }
+// Add any other properties within the "transections" array
 
 interface IShop {
   id: string;
@@ -106,4 +117,13 @@ interface IAPiResponse {
 }
 
 // Export the interfaces for use in your application
-export { RootState, AuthState, User, LoginState, ICredential, IShop };
+export {
+  RootState,
+  AuthState,
+  User,
+  LoginState,
+  ICredential,
+  IShop,
+  ITransaction,
+  Product,
+};

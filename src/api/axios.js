@@ -5,6 +5,6 @@ const axiosConfig = axios.create({
 });
 
 axiosConfig.defaults.headers.common["x-access-token"] =
-  localStorage.getItem("authToken") || "";
+  localStorage.getItem("token") || "";
 
 export default axiosConfig;
