@@ -126,12 +126,12 @@ const CreateRetailer: React.FC = () => {
           <div className='flex space-x-4 mb-4'>
             <div className='w-1/3'>
               <label
-                htmlFor='shippingMobile'
+                htmlFor='reciverName'
                 className='block text-gray-700 text-sm font-bold mb-2'>
                 Delivery Reciver Name
               </label>
               <input
-                name='shippingMobile'
+                name='reciverName'
                 type='text'
                 value={formData.reciverName}
                 onChange={handleInputChange}
