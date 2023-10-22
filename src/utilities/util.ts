@@ -13,8 +13,8 @@ export const ClassNames = (...classNames: (string | undefined)[]): string => {
 
 //"https://res.cloudinary.com/emerging-it/image/upload/v1697923562/Growb/nbj932fhmcgeqahmn9x1.png";
 
-export const projectLogo =
-  "https://res.cloudinary.com/emerging-it/image/upload/v1690594985/demo-task/GrowB/logo_v6uhgm.png";
+export const projectLogo = "/android-chrome-192x192.png";
+// ("https://res.cloudinary.com/emerging-it/image/upload/v1690594985/demo-task/GrowB/logo_v6uhgm.png");
 
 export const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
