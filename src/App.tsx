@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
 
@@ -6,16 +6,33 @@ import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./pages/dashboard";
 import { useLogin } from "./hooks/useAuth";
 import LoginPage from "./pages/auth/login";
+import { isExpired } from "react-jwt";
 function App() {
-  const { token, user } = useLogin();
+  const { token } = useLogin();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  // Check token expiration on component mount
+  const checkJsonToken = () => {
+    const tokenFromStore = !!token ? token : localStorage.getItem("token");
+
+    if (tokenFromStore) {
+      setIsAuthenticated(!isExpired(tokenFromStore));
+    }
+  };
   useEffect(() => {
-    document.body.style.background = "#f9fafb";
+    checkJsonToken();
+    //eslint-disable-next-line
+  }, [token]);
+
+  useEffect(() => {
+    checkJsonToken();
+    //eslint-disable-next-line
   }, []);
 
   return (
     <div className=' h-[100vh] '>
-      {(!token || !user) && <LoginPage />}
-      {!!token && !!user && <Dashboard />}
+      {!isAuthenticated && <LoginPage />}
+      {!!isAuthenticated && <Dashboard />}
       <ToastContainer
         position='top-left'
         autoClose={3500}
