@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosConfig = axios.create({
-  baseURL: "http://localhost:7002/",
+  baseURL: "https://growb-info.onrender.com/",
 });
 
 axiosConfig.defaults.headers.common["x-access-token"] =

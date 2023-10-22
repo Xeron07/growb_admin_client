@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:7002/api";
+const baseUrl = "https://growb-info.onrender.com/api";
 
 const apiConfig = {
   users: {
