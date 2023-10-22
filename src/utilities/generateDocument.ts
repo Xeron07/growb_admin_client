@@ -20,12 +20,13 @@ const calculateTotalPrice = (transaction: ITransaction) => {
     }
   }
 
-  return (totalPrice - transaction?.totalDiscount).toFixed(2);
+  return totalPrice;
 };
 
 export const generatePurchageOrder = (
   shop: IShop,
-  transection: ITransaction
+  transection: ITransaction,
+  menufectureData: { name: string; address: string }
 ) => {
   const doc = new jsPDF();
 
@@ -44,8 +45,8 @@ export const generatePurchageOrder = (
       mobile: shop?.shipping?.mobileNumber,
     },
     companyInfo: {
-      name: "Growb",
-      address: "Road #1/c House #29 Nikunja-2, Khilkhet, Dhaka",
+      name: menufectureData?.name,
+      address: menufectureData?.address,
     },
     products: [...transection?.products],
   };
@@ -124,14 +125,15 @@ export const generatePurchageOrder = (
   const data = purchaseOrder.products.map((product, index) => [
     index + 1,
     product.name,
+    product.variant,
     product.quantity,
-    `$${product.unitPrice.toFixed(2)}`,
-    `$${!!product.discount ? product.discount.toFixed(2) : "0.00"}`,
-    `$${(product.quantity * product.unitPrice - product?.discount).toFixed(2)}`,
+    `${product.unitPrice.toFixed(2)}`,
+    `${!!product.discount ? product.discount.toFixed(2) : "0.00"}`,
+    `${(product.quantity * product.unitPrice - product?.discount).toFixed(2)}`,
   ]);
 
   // Add an empty row to separate the products and the subtotal
-  data.push(["", "", "", "", "", ""]);
+  data.push(["", "", "", "", "", "", ""]);
 
   // Calculate the sum of all prices
   const totalPrice = calculateTotalPrice(transection);
@@ -142,8 +144,9 @@ export const generatePurchageOrder = (
     "",
     "",
     "",
+    "",
     "Discount",
-    `$${
+    `${
       !!transection?.totalDiscount
         ? transection.totalDiscount.toFixed(2)
         : "0.00"
@@ -151,7 +154,18 @@ export const generatePurchageOrder = (
   ];
   data.push(discountRow);
   // Subtotal row
-  const subtotalRow = ["", "", "", "", "Subtotal", `$${totalPrice}`];
+  const subtotalRow = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "Subtotal",
+    `${(
+      totalPrice -
+      (!!transection?.totalDiscount ? transection?.totalDiscount : 0)
+    ).toFixed(2)}`,
+  ];
   data.push(subtotalRow);
 
   console.log(data);
@@ -170,9 +184,199 @@ export const generatePurchageOrder = (
     body: data,
     theme: "striped",
     horizontalPageBreak: true,
-    styles: { halign: "center" },
+    styles: { halign: "left" },
   });
 
   // Save the PDF or open it in a new tab
   doc.save(`PurchaseOrder-${transection?.orderId}.pdf`);
+};
+
+export const generateInvoice = (
+  shop: IShop,
+  transection: ITransaction,
+  shippingCost: number = 0
+) => {
+  const doc = new jsPDF();
+
+  // Sample data
+  const purchaseOrder = {
+    orderNumber: transection?.orderId,
+    trackingId: transection?.trackId,
+    customerInfo: {
+      name: `${shop?.shopName} - ${shop?.ownerName}`,
+      address: shop?.location?.address,
+      mobile: shop?.mobileNumber,
+    },
+    orderStatus: "Drop_to_transport",
+    shippingInfo: {
+      name: shop?.shipping?.reciverName,
+      address: shop?.shipping?.address,
+      mobile: shop?.shipping?.mobileNumber,
+    },
+    companyInfo: {
+      name: "Growb",
+      address: "Road #1/c House #29 Nikunja-2, Khilkhet, Dhaka",
+    },
+    products: [...transection?.products],
+  };
+
+  // Add an image (replace 'imageURL' with the actual image URL)
+  const imageURL =
+    "https://res.cloudinary.com/emerging-it/image/upload/v1690594985/demo-task/GrowB/logo_v6uhgm.png";
+  doc.addImage(imageURL, "JPEG", 10, 5, 32, 32);
+
+  // Add customer and shipping information
+
+  // doc.setFontSize(14);
+  // doc.setFont("roboto", "bold");
+  // doc.text(`Customer Information:`, 10, 40);
+  doc.setFontSize(12);
+  doc.setFont("roboto", "normal");
+  doc.text(`${shop?.shopName}`, 15, 35);
+  doc.setFontSize(10);
+  doc.setFont("roboto", "normal");
+  shop?.email && doc.text(`${shop?.email}`, 15, 42);
+  doc.text(
+    ` ${purchaseOrder.customerInfo.mobile}`,
+    15,
+    !!shop?.email ? 48 : 42
+  );
+
+  doc.setFontSize(12);
+  doc.setFont("roboto", "normal");
+  doc.text(`Billing Information:`, 15, 70);
+  doc.setFontSize(10);
+  doc.setFont("roboto", "normal");
+  doc.text(`Name: ${purchaseOrder.customerInfo.name}`, 15, 75);
+  doc.text(`Address: ${purchaseOrder.customerInfo.address}`, 15, 80);
+  doc.text(`Mobile Number: ${purchaseOrder.customerInfo.mobile}`, 15, 85);
+
+  doc.text(`Payment Method: Credit 15 Days`, 15, 95);
+
+  doc.setFontSize(12);
+  doc.setFont("roboto", "normal");
+  doc.text(`Shipping Information:`, 120, 70);
+  doc.setFontSize(10);
+  doc.setFont("roboto", "normal");
+  doc.text(`Name: ${purchaseOrder.shippingInfo.name}`, 120, 75);
+  doc.setFontSize(10);
+  doc.text(`Address: ${purchaseOrder.shippingInfo.address}`, 120, 80);
+  doc.setFontSize(10);
+  doc.text(`Mobile: ${purchaseOrder.shippingInfo.mobile}`, 120, 85);
+
+  // Add company information
+  doc.setFontSize(17);
+  doc.setFont("roboto", "bold");
+  doc.text(`Invoice`, 120, 20);
+  doc.setFontSize(10);
+  doc.setFont("roboto", "normal");
+  doc.text(
+    `Order Date: ${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`,
+    120,
+    30
+  );
+  doc.text(`Order ID: ${purchaseOrder.orderNumber}`, 120, 36);
+  doc.text(`Tracking ID: ${purchaseOrder.trackingId}`, 120, 42);
+  doc.text(`Product Category: Shoes`, 120, 48);
+
+  // Product list table
+  const columns = [
+    "SL NO.",
+    "Description",
+    "Article",
+    "Qty(Pair)",
+    "Price",
+    "Discount",
+    "Total",
+  ];
+  const data = purchaseOrder.products.map((product, index) => [
+    index + 1,
+    product.name,
+    product.variant,
+    product.quantity,
+    `${product.unitPrice.toFixed(2)}`,
+    `${!!product.discount ? product.discount.toFixed(2) : "0.00"}`,
+    `${(product.quantity * product.unitPrice - product?.discount).toFixed(2)}`,
+  ]);
+
+  // Add an empty row to separate the products and the subtotal
+  data.push(["", "", "", "", "", "", ""]);
+
+  // Calculate the sum of all prices
+  const totalPrice = calculateTotalPrice(transection);
+
+  const dataV2 = [];
+
+  //discount row
+
+  const totalRow = [
+    { colSpan: 5, content: "" },
+    { content: "Total" },
+    {
+      content: `${totalPrice.toFixed(2)}`,
+    },
+  ];
+
+  //discount row
+  const discountRow = [
+    { colSpan: 5, content: "" },
+    { content: "Discount (-)" },
+    {
+      content: `${
+        !!transection?.totalDiscount
+          ? transection.totalDiscount.toFixed(2)
+          : "0.00"
+      }`,
+    },
+  ];
+
+  //tax row
+  const taxRow = [
+    { colSpan: 5, content: "" },
+    { content: "Tax" },
+    {
+      content: `0.00`,
+    },
+  ];
+
+  //shipping cost row
+  const shippingCostRow = [
+    { colSpan: 5, content: "" },
+    { content: "Shipping Cost (+)" },
+    {
+      content: shippingCost,
+    },
+  ];
+
+  // Subtotal row
+  const subtotalRow = [
+    { colSpan: 5, content: "" },
+    { content: "SubTotal" },
+    {
+      content: `${(
+        totalPrice +
+        shippingCost -
+        (!!transection?.totalDiscount ? transection?.totalDiscount : 0)
+      ).toFixed(2)}`,
+    },
+  ];
+
+  dataV2.push(totalRow);
+  dataV2.push(taxRow);
+
+  dataV2.push(shippingCostRow);
+  dataV2.push(discountRow);
+  dataV2.push(subtotalRow);
+
+  autoTable(doc, {
+    startY: 100,
+    head: [columns],
+    body: [...data, ...dataV2],
+    theme: "grid",
+    horizontalPageBreak: true,
+    styles: { halign: "left", overflow: "linebreak" },
+  });
+
+  // Save the PDF or open it in a new tab
+  doc.save(`invoice-${transection?.orderId}.pdf`);
 };
