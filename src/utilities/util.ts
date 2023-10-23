@@ -17,7 +17,7 @@ export const projectLogo = "/android-chrome-192x192.png";
 // ("https://res.cloudinary.com/emerging-it/image/upload/v1690594985/demo-task/GrowB/logo_v6uhgm.png");
 
 export const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
+  { name: "Dashboard", href: "/", icon: HomeIcon, current: true },
   {
     name: "Retailers",
     href: "/retailer",

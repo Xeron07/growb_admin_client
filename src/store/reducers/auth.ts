@@ -19,6 +19,8 @@ const authSlice = createSlice({
     logout: (state) => {
       state.token = "";
       state.user = null;
+      localStorage.setItem("token", "");
+      localStorage.setItem("refreshToken", "");
       window.location.href = "/";
     },
   },

@@ -1,52 +1,80 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import { ToastContainer } from "react-toastify";
-
-import "react-toastify/dist/ReactToastify.css";
-import Dashboard from "./pages/dashboard";
-import { useLogin } from "./hooks/useAuth";
-import LoginPage from "./pages/auth/login";
+import React, { useState, useEffect } from "react";
+import axios from "./api/axios";
 import { isExpired } from "react-jwt";
-function App() {
+import Page from "./pages";
+import apiConfig from "./api/config";
+import { projectLogo } from "./utilities/util";
+import { useLogin } from "./hooks/useAuth";
+const App: React.FC = () => {
+  const [authToken, setToken] = useState<string>(
+    localStorage.getItem("token") || ""
+  );
+  const [isFetchingToken, setIsFetchingToken] = useState<boolean>(false);
+  const [authSuccess, setAuthSuccess] = useState<boolean>(false);
+
   const { token } = useLogin();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  // Check token expiration on component mount
-  const checkJsonToken = () => {
-    const tokenFromStore = !!token ? token : localStorage.getItem("token");
-
-    if (tokenFromStore) {
-      setIsAuthenticated(!isExpired(tokenFromStore));
-    }
-  };
   useEffect(() => {
-    checkJsonToken();
+    // Check if token exists and is still valid
+    if (authToken) {
+      setAuthSuccess(!isExpired(authToken));
+      if (decodeToken(authToken)) {
+        // Token is expired, initiate a refresh
+        refreshAccessToken();
+      }
+    }
     //eslint-disable-next-line
+  }, [authToken]);
+
+  useEffect(() => {
+    if (!!token) setToken(token);
   }, [token]);
 
-  useEffect(() => {
-    checkJsonToken();
-    //eslint-disable-next-line
-  }, []);
+  const decodeToken = (authToken: string) => {
+    return isExpired(authToken);
+  };
+
+  const refreshAccessToken = () => {
+    if (!isFetchingToken) {
+      setIsFetchingToken(true);
+      // Make a request to your backend to refresh the token
+      axios
+        .post(apiConfig.refreshToken, {
+          refreshToken: localStorage.getItem("refreshToken"),
+        })
+        .then((response) => {
+          const newToken = response.data.accessToken;
+          setToken(newToken);
+          setIsFetchingToken(false);
+          // Update the token in local storage
+          localStorage.setItem("token", newToken);
+        })
+        .catch((error) => {
+          setIsFetchingToken(false);
+          // Handle token refresh failure, e.g., redirect to login
+          console.error("Token refresh failed:", error);
+          // You may want to redirect the user to the login page if token refresh fails
+          // window.location.href = '/login';
+        });
+    }
+  };
+
+  // Your component JSX and the rest of your application logic
 
   return (
-    <div className=' h-[100vh] '>
-      {!isAuthenticated && <LoginPage />}
-      {!!isAuthenticated && <Dashboard />}
-      <ToastContainer
-        position='top-left'
-        autoClose={3500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme='light'
-      />
-    </div>
+    <>
+      {!isFetchingToken && <Page isAuth={authSuccess} />}
+      {isFetchingToken && (
+        <div className='w-full h-[100vh] flex justify-center items-center'>
+          <img
+            src={projectLogo}
+            alt='main-logo'
+            className=' w-20 h-20 animate-bounce'
+          />
+        </div>
+      )}
+    </>
   );
-}
+};
 
 export default App;

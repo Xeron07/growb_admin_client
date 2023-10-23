@@ -4,6 +4,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { navigation, projectLogo } from "../../utilities/util";
 import { Link, useLocation } from "react-router-dom";
 import { useLogin } from "../../hooks/useAuth";
+import UserSetting from "../auth/userSettings";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -19,9 +20,11 @@ const LeftBar = () => {
   const updateTabs = () => {
     navigation.forEach((tab) => {
       tab.current =
-        location.pathname === "/" && tab.href === "/dashboard"
+        location.pathname === "/" && tab.href === "/"
           ? true
-          : location.pathname.includes(tab.href);
+          : location.pathname !== "/" &&
+            tab.href.length > 2 &&
+            location.pathname.includes(tab.href);
     });
   };
 
@@ -90,7 +93,7 @@ const LeftBar = () => {
                   <div className='flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2'>
                     <div className='flex h-16 shrink-0 items-center'>
                       <img
-                        className=' h-28 w-auto'
+                        className=' h-10 w-auto'
                         src={projectLogo}
                         alt='Your Company'
                       />
@@ -140,7 +143,7 @@ const LeftBar = () => {
           <div className='flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6'>
             <div className='flex h-16 shrink-0 items-center'>
               <img
-                className='h-10 w-auto'
+                className=' h-12 w-auto'
                 src={projectLogo}
                 alt='Your Company'
               />
@@ -175,17 +178,20 @@ const LeftBar = () => {
                     ))}
                   </ul>
                 </li>
-
                 <li className='-mx-6 mt-auto'>
-                  <span className='flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50'>
-                    <img
-                      className='h-8 w-8 rounded-full bg-gray-50'
-                      src={user?.avatar}
-                      alt=''
-                    />
-                    <span className='sr-only'>Your profile</span>
-                    <span aria-hidden='true'>{user?.name}</span>
-                  </span>
+                  <UserSetting>
+                    <>
+                      <span className='flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50'>
+                        <img
+                          className='h-8 w-8 rounded-full bg-gray-50'
+                          src={user?.avatar}
+                          alt=''
+                        />
+                        <span className='sr-only'>Your profile</span>
+                        <span aria-hidden='true'>{user?.name}</span>
+                      </span>
+                    </>
+                  </UserSetting>
                 </li>
               </ul>
             </nav>

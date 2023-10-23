@@ -1,6 +1,7 @@
-const baseUrl = "https://growb-info.onrender.com/api";
+const baseUrl = "/api";
 
 const apiConfig = {
+  refreshToken: `${baseUrl}/refreshToken`,
   users: {
     login: (version = "v1") => `${baseUrl}/${version}/user/login`,
   },

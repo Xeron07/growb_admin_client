@@ -20,10 +20,11 @@ export const loginAsync = createAsyncThunk(
 
       if (response?.success) {
         // Extract the token and user data from the API response
-        const { token } = response?.data;
+        const { token, refreshToken } = response?.data;
 
         // Dispatch the login success action with the token and user data
         localStorage.setItem("token", token);
+        localStorage.setItem("refreshToken", refreshToken);
         dispatch(loginSuccess({ token, user: response?.data }));
 
         // Return the API response data
