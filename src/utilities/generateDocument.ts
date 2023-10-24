@@ -317,24 +317,30 @@ export const generateInvoice = (
     "Discount",
     "Total",
   ];
-  const data = purchaseOrder.products.map((product, index) => [
-    index + 1,
-    product.name,
-    product.variant,
-    product.quantity,
-    `${product.unitPrice.toFixed(2)}`,
-    `${!!product.discount ? product.discount.toFixed(2) : "0.00"}`,
-    `${(
-      product.quantity * product.unitPrice -
-      (!!product.discount ? product.discount : 0)
-    ).toFixed(2)}`,
-  ]);
+  const data = purchaseOrder.products.map((product, index) => {
+    const increasedUnitPrice = product.unitPrice * 1.05; // Increase unit price by 5%
+    const totalPerProduct =
+      product.quantity * increasedUnitPrice -
+      (!!product.discount ? product.discount : 0);
+
+    return [
+      index + 1,
+      product.name,
+      product.variant,
+      product.quantity,
+      `${increasedUnitPrice.toFixed(2)}`,
+      `${!!product.discount ? product.discount.toFixed(2) : "0.00"}`,
+      `${totalPerProduct.toFixed(2)}`,
+    ];
+  });
+
+  // Calculate the total price by summing up the total of each product
+  const totalPrice = data.reduce((accumulator, product) => {
+    return accumulator + Number(product[6]);
+  }, 0);
 
   // Add an empty row to separate the products and the subtotal
   data.push(["", "", "", "", "", "", ""]);
-
-  // Calculate the sum of all prices
-  const totalPrice = calculateTotalPrice(transection);
 
   const dataV2 = [];
 
