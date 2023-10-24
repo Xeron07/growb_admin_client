@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useRetailer } from "../../hooks/useShop";
 import { CircleSpinner } from "../../components/loading";
 import { ClassNames } from "../../utilities/util";
+import { toast } from "react-toastify";
 
 interface FormData {
   name: string;
@@ -59,7 +60,22 @@ const CreateRetailer: React.FC = () => {
 
     setLoading(true);
 
-    await addRetailer(payload);
+    const res: boolean = await addRetailer(payload);
+    if (res) {
+      toast.success("Retailer Added Successfully");
+      setFormData({
+        name: "",
+        email: "",
+        mobileNumber: "",
+        shippingAddress: "",
+        shippingMobile: "",
+        ownerName: "",
+        shopName: "",
+        location: "",
+        whatsapp: "",
+        reciverName: "",
+      });
+    }
 
     setLoading(false);
   };

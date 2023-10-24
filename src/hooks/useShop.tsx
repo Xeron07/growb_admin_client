@@ -25,8 +25,10 @@ export const useRetailer = () => {
     try {
       await dispatch(addShop(shopInformation));
       await fetchRetailers();
+      return true;
     } catch (error: any) {
       // Handle the error, if needed
+      return false;
     }
   };
 
