@@ -192,7 +192,7 @@ export const generatePurchageOrder = (
 
   // Add your copyright text to every page
   const copyrightText =
-    "© +88-01322075679 info@growb.xyz http://www.growb.xyz H-43, R-16, Nikunja-2, Dhaka-1229";
+    "© +88-01322075679 info@growb.xyz http://www.growb.xyz H-29, R-1/C, Nikunja-2, Dhaka-1229";
 
   // Add a footer with the copyright text on every page
   const totalPages = doc.internal.pages?.length - 1;
@@ -205,13 +205,13 @@ export const generatePurchageOrder = (
     doc.setDrawColor(0); // 0 for black
     doc.setLineWidth(0.2); // Adjust the line width as needed
     doc.line(
-      15,
+      10,
       doc.internal.pageSize.height - 15,
       200,
       doc.internal.pageSize.height - 15
     ); // Adjust the line's coordinates
 
-    doc.text(copyrightText, 40, doc.internal.pageSize.height - 10);
+    doc.text(copyrightText, 35, doc.internal.pageSize.height - 10);
     doc.text(`${i}/${totalPages}`, 190, doc.internal.pageSize.height - 10);
   }
 
@@ -410,7 +410,7 @@ export const generateInvoice = (
 
   // Add your copyright text to every page
   const copyrightText =
-    "© +88-01322075679 info@growb.xyz http://www.growb.xyz H-43, R-16, Nikunja-2, Dhaka-1229";
+    "© +88-01322075679 info@growb.xyz http://www.growb.xyz H-29, R-1/C, Nikunja-2, Dhaka-1229";
 
   // Add a footer with the copyright text on every page
   const totalPages = doc.internal.pages?.length - 1;
@@ -423,13 +423,13 @@ export const generateInvoice = (
     doc.setDrawColor(0); // 0 for black
     doc.setLineWidth(0.2); // Adjust the line width as needed
     doc.line(
-      15,
+      10,
       doc.internal.pageSize.height - 15,
       200,
       doc.internal.pageSize.height - 15
     ); // Adjust the line's coordinates
 
-    doc.text(copyrightText, 40, doc.internal.pageSize.height - 10);
+    doc.text(copyrightText, 35, doc.internal.pageSize.height - 10);
     doc.text(`${i}/${totalPages}`, 190, doc.internal.pageSize.height - 10);
   }
 
