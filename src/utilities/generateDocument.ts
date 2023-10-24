@@ -263,12 +263,7 @@ export const generateInvoice = (
   doc.text(`${shop?.shopName}`, 15, 35);
   doc.setFontSize(10);
   doc.setFont("roboto", "normal");
-  !!shop?.email && doc.text(`${shop?.email}`, 15, 42);
-  doc.text(
-    ` ${purchaseOrder.customerInfo.mobile}`,
-    15,
-    !!shop?.email ? 48 : 42
-  );
+  doc.text(` ${purchaseOrder.customerInfo.mobile}`, 15, 42);
 
   doc.setFontSize(12);
   doc.setFont("roboto", "normal");
