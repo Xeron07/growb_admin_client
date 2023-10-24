@@ -120,7 +120,7 @@ export const generatePurchageOrder = (
     "Quantity",
     "Price",
     "Discount",
-    "Total",
+    "Total(৳)",
   ];
   const data = purchaseOrder.products.map((product, index) => [
     index + 1,
@@ -310,7 +310,7 @@ export const generateInvoice = (
     "Qty(Pair)",
     "Price",
     "Discount",
-    "Total",
+    "Total(৳)",
   ];
   const data = purchaseOrder.products.map((product, index) => {
     const increasedUnitPrice = product.unitPrice * 1.05; // Increase unit price by 5%
