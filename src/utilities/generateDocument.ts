@@ -243,7 +243,7 @@ export const generateInvoice = (
     },
     companyInfo: {
       name: "Growb",
-      address: "Road #1/c House #29 Nikunja-2, Khilkhet, Dhaka",
+      address: "Road #1/C House #29 Nikunja-2, Khilkhet, Dhaka",
     },
     products: [...transection?.products],
   };
@@ -263,7 +263,7 @@ export const generateInvoice = (
   doc.text(`${shop?.shopName}`, 15, 35);
   doc.setFontSize(10);
   doc.setFont("roboto", "normal");
-  shop?.email && doc.text(`${shop?.email}`, 15, 42);
+  !!shop?.email && doc.text(`${shop?.email}`, 15, 42);
   doc.text(
     ` ${purchaseOrder.customerInfo.mobile}`,
     15,
