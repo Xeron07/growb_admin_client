@@ -129,7 +129,10 @@ export const generatePurchageOrder = (
     product.quantity,
     `${product.unitPrice.toFixed(2)}`,
     `${!!product.discount ? product.discount.toFixed(2) : "0.00"}`,
-    `${(product.quantity * product.unitPrice - product?.discount).toFixed(2)}`,
+    `${(
+      product.quantity * product.unitPrice -
+      (!!product.discount ? product.discount : 0)
+    ).toFixed(2)}`,
   ]);
 
   // Add an empty row to separate the products and the subtotal
@@ -186,6 +189,31 @@ export const generatePurchageOrder = (
     horizontalPageBreak: true,
     styles: { halign: "left" },
   });
+
+  // Add your copyright text to every page
+  const copyrightText =
+    "© +88-01322075679 info@growb.xyz http://www.growb.xyz H-43, R-16, Nikunja-2, Dhaka-1229";
+
+  // Add a footer with the copyright text on every page
+  const totalPages = doc.internal.pages?.length - 1;
+
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.setFontSize(10);
+
+    // Add a black line
+    doc.setDrawColor(0); // 0 for black
+    doc.setLineWidth(0.2); // Adjust the line width as needed
+    doc.line(
+      15,
+      doc.internal.pageSize.height - 15,
+      200,
+      doc.internal.pageSize.height - 15
+    ); // Adjust the line's coordinates
+
+    doc.text(copyrightText, 40, doc.internal.pageSize.height - 10);
+    doc.text(`${i}/${totalPages}`, 190, doc.internal.pageSize.height - 10);
+  }
 
   // Save the PDF or open it in a new tab
   doc.save(`PurchaseOrder-${transection?.orderId}.pdf`);
@@ -296,7 +324,10 @@ export const generateInvoice = (
     product.quantity,
     `${product.unitPrice.toFixed(2)}`,
     `${!!product.discount ? product.discount.toFixed(2) : "0.00"}`,
-    `${(product.quantity * product.unitPrice - product?.discount).toFixed(2)}`,
+    `${(
+      product.quantity * product.unitPrice -
+      (!!product.discount ? product.discount : 0)
+    ).toFixed(2)}`,
   ]);
 
   // Add an empty row to separate the products and the subtotal
@@ -376,6 +407,31 @@ export const generateInvoice = (
     horizontalPageBreak: true,
     styles: { halign: "left", overflow: "linebreak" },
   });
+
+  // Add your copyright text to every page
+  const copyrightText =
+    "© +88-01322075679 info@growb.xyz http://www.growb.xyz H-43, R-16, Nikunja-2, Dhaka-1229";
+
+  // Add a footer with the copyright text on every page
+  const totalPages = doc.internal.pages?.length - 1;
+
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.setFontSize(10);
+
+    // Add a black line
+    doc.setDrawColor(0); // 0 for black
+    doc.setLineWidth(0.2); // Adjust the line width as needed
+    doc.line(
+      15,
+      doc.internal.pageSize.height - 15,
+      200,
+      doc.internal.pageSize.height - 15
+    ); // Adjust the line's coordinates
+
+    doc.text(copyrightText, 40, doc.internal.pageSize.height - 10);
+    doc.text(`${i}/${totalPages}`, 190, doc.internal.pageSize.height - 10);
+  }
 
   // Save the PDF or open it in a new tab
   doc.save(`invoice-${transection?.orderId}.pdf`);

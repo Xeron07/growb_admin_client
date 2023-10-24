@@ -4,6 +4,8 @@ const apiConfig = {
   refreshToken: `${baseUrl}/refreshToken`,
   users: {
     login: (version = "v1") => `${baseUrl}/${version}/user/login`,
+    getUser: (version = "v1", userID) =>
+      `${baseUrl}/${version}/user/by/${userID}`,
   },
   transections: {
     getAllTransection: (version = "v1", shopId, trackId) =>

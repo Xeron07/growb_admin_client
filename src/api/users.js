@@ -20,3 +20,22 @@ export const login = (data) => {
     }
   });
 };
+
+export const fetchUserData = (userID) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await axios.get(config.users.getUser("v1", userID));
+      if (response.status === 200 && response.data?.success)
+        resolve({
+          success: true,
+          data: response.data?.dataSource,
+        });
+      // Resolve with the response data
+      else reject({ success: false, error: "Please Log in again" });
+    } catch (error) {
+      reject({
+        error: "Please Log in again",
+      });
+    }
+  });
+};

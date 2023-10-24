@@ -1,12 +1,30 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { useLogin } from "../hooks/useAuth";
 
-//"https://growb-info.onrender.com"
-const axiosConfig = axios.create({
-  baseURL: "http://localhost:7002",
+const axiosInstance = axios.create({
+  baseURL: "https://growb-info.onrender.com",
   headers: {
-    "Content-Type": "application/json",
-    "x-access-token": localStorage.getItem("token") || "", // Include the access token
+    "Access-Control-Allow-Origin": "*",
   },
 });
 
-export default axiosConfig;
+axiosInstance.interceptors.request.use(
+  async (config) => {
+    const token = await localStorage.getItem("token");
+    if (config.headers) config.headers.set("x-access-token", token);
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error instanceof AxiosError && error.response?.status === 403) {
+      useLogin().signOut();
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default axiosInstance;

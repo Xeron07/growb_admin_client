@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "./api/axios";
-import { isExpired } from "react-jwt";
+import { isExpired, decodeToken } from "react-jwt";
 import Page from "./pages";
 import apiConfig from "./api/config";
 import { projectLogo } from "./utilities/util";
@@ -12,15 +12,20 @@ const App: React.FC = () => {
   const [isFetchingToken, setIsFetchingToken] = useState<boolean>(false);
   const [authSuccess, setAuthSuccess] = useState<boolean>(false);
 
-  const { token } = useLogin();
+  const { user, token, fetchUser } = useLogin();
 
   useEffect(() => {
     // Check if token exists and is still valid
     if (authToken) {
-      setAuthSuccess(!isExpired(authToken));
-      if (decodeToken(authToken)) {
+      if (decodeTokenFunc(authToken)) {
         // Token is expired, initiate a refresh
         refreshAccessToken();
+      } else {
+        if (!user) {
+          const { user_id } = decodeToken(authToken) as { user_id: string };
+          fetchUser(user_id);
+        }
+        setAuthSuccess(true);
       }
     }
     //eslint-disable-next-line
@@ -30,7 +35,7 @@ const App: React.FC = () => {
     if (!!token) setToken(token);
   }, [token]);
 
-  const decodeToken = (authToken: string) => {
+  const decodeTokenFunc = (authToken: string) => {
     return isExpired(authToken);
   };
 
