@@ -1,7 +1,11 @@
 const baseUrl = "/api";
 
 const apiConfig = {
-  refreshToken: `${baseUrl}/refreshToken`,
+  refreshToken: `${baseUrl}/refresh-token`,
+  dashboard: {
+    getDashBoardDetails: (version = "v1") =>
+      `${baseUrl}/${version}/transection/dashboard`,
+  },
   users: {
     login: (version = "v1") => `${baseUrl}/${version}/user/login`,
     getUser: (version = "v1", userID) =>

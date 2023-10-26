@@ -116,6 +116,41 @@ interface IAPiResponse {
   error?: any;
 }
 
+interface IStateData {
+  totalAmountSum: number;
+  totalTransactions: number;
+}
+
+interface IRecentTransactionUser {
+  email: string;
+  userId: string;
+  _id: string;
+}
+interface IRecentTransaction {
+  date: string;
+  orderId: string;
+  trackId: string;
+  totalDiscount: number;
+  status: string;
+  user: IRecentTransactionUser;
+  totalAmount: number;
+  shopName: string;
+}
+
+//default payload interface for updateState reducer
+interface IReducerPayload {
+  key: string;
+  value: any;
+}
+
+interface ITopShop {
+  icon: string;
+  totalAmount: number; // Include the calculated totalAmount
+  shopName: string;
+  ownerName: string;
+  mobileNumber: string;
+}
+
 // Export the interfaces for use in your application
 export {
   RootState,
@@ -126,4 +161,7 @@ export {
   IShop,
   ITransaction,
   Product,
+  ITopShop,
+  IReducerPayload,
+  IRecentTransaction,
 };

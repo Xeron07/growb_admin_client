@@ -1,6 +1,6 @@
 {
   "name": "growb_admin_client",
-  "version": "0.1.7",
+  "version": "0.1.9",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^1.7.17",
@@ -14,12 +14,14 @@
     "@types/react": "^18.2.31",
     "@types/react-dom": "^18.2.14",
     "axios": "^1.5.1",
+    "chart.js": "^4.4.0",
     "dotenv": "^16.3.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.7.0",
     "jwt-decode": "^3.1.2",
     "node-sass": "^9.0.0",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-jwt": "^1.2.0",
     "react-redux": "^8.1.3",

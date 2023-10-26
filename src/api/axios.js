@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { useLogin } from "../hooks/useAuth";
 
 const axiosInstance = axios.create({
-  baseURL: "https://growb-info.onrender.com",
+  baseURL: "http://localhost:7002",
   headers: {
     "Access-Control-Allow-Origin": "*",
   },
