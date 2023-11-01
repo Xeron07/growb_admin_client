@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { useLogin } from "../hooks/useAuth";
 
 const axiosInstance = axios.create({
-  baseURL: "https://growb-info.vercel.app",
+  baseURL: "https://growb-info.onrender.com",
   headers: {
     "Access-Control-Allow-Origin": "*",
   },
