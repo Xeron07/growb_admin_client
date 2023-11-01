@@ -1,6 +1,6 @@
 {
   "name": "growb_admin_client",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^1.7.17",
